@@ -127,7 +127,7 @@ paths:
         - name: uuid
           format: uuid
           in: path
-          description: The name of the user that needs to be deleted
+          description: The UUID of the user that needs to be deleted
           required: true
           type: string
       responses:
@@ -168,7 +168,7 @@ definitions:
       phone_numbers:
         type: array
         items:
-          type: number
+          type: integer
           format: int32
           pattern: '^\d{10}$'
         description: Unformatted Phone Numbers
