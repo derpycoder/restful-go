@@ -113,20 +113,26 @@ definitions:
     type: object
     properties:
       id:
-        type: integer
-        format: int64
-      username:
         type: string
+        description: Id can be used for further queries
       firstName:
         type: string
+        description: First Name of the User
+      middleName:
+        type: string
+        description: Middle Name of the User
       lastName:
         type: string
-      email:
+        description: Last Name of the User
+      email_ids:
         type: string
         description: Email Ids
-      phone:
+      phone_numbers:
         type: string
         description: Unformatted Phone Number
+      dob:
+        type: string
+        description: Date of Birth
       userStatus:
         type: integer
         format: int32
