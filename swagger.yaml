@@ -13,10 +13,10 @@ externalDocs:
 host: custom-library-164415.appspot.com
 basePath: /v1
 tags:
-  - name: User
+  - name: Users
     description: Home for every query related to Users
 schemes:
-  - http
+  - https
 consumes:
   - application/json
 produces:
@@ -25,8 +25,8 @@ paths:
   /users:
     post:
       tags:
-        - user
-      summary: Create an User
+        - Users
+      summary: Create
       description: Maybe only Society Admin can create an User
       operationId: createUser
       parameters:
@@ -42,8 +42,8 @@ paths:
   '/users/{username}':
     get:
       tags:
-        - user
-      summary: Get user by user name
+        - Users
+      summary: Read
       description: ''
       operationId: getUserByName
       parameters:
@@ -63,8 +63,8 @@ paths:
           description: User not found
     put:
       tags:
-        - user
-      summary: Updated user
+        - Users
+      summary: Update
       description: This can only be done by the logged in user.
       operationId: updateUser
       parameters:
@@ -86,8 +86,8 @@ paths:
           description: User not found
     delete:
       tags:
-        - user
-      summary: Delete user
+        - Users
+      summary: Delete
       description: This can only be done by the logged in user.
       operationId: deleteUser
       parameters:
@@ -102,10 +102,12 @@ paths:
         '404':
           description: User not found
 securityDefinitions:
-  api_key:
+  ApiKeyAuth:
     type: apiKey
-    name: api_key
+    name: X-API-Key
     in: header
+security:
+  - ApiKeyAuth: []
 definitions:
   User:
     type: object
