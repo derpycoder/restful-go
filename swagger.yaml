@@ -58,7 +58,7 @@ paths:
               dob: '2018-01-26'
               role: member
               image_url: 'http://example.com/profile.jpg'
-              blood_gropu: A+
+              blood_group: A+
               society_uuid: 8888-7777-4444
               family_uuid: 8888-6666-3333
               date_created: '2018-01-26T13:26:53.557Z'
@@ -256,7 +256,7 @@ definitions:
       dob: '2018-01-26'
       role: member
       image_url: 'http://example.com/profile.jpg'
-      blood_gropu: A+
+      blood_group: A+
       society_uuid: 8888-7777-4444
       family_uuid: 8888-6666-3333
       date_created: null
