@@ -159,7 +159,7 @@ paths:
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
-    name: X-API-Key
+    name: unite_society_api_key
     in: header
 security:
   - ApiKeyAuth: []
