@@ -170,6 +170,7 @@ definitions:
         items:
           type: number
           format: int32
+          pattern: '^\d{10}$'
         description: Unformatted Phone Numbers
       dob:
         type: string
