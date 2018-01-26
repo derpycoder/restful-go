@@ -168,7 +168,7 @@ definitions:
         description: Unformatted Phone Numbers
       dob:
         type: string
-        description: Date of Birth in UTC Zulu Time
+        description: Date of Birth in UTC Zulu Format
       role:
         type: string
         description: Role of the User
@@ -192,3 +192,22 @@ definitions:
           - B+
           - AB−
           - AB+
+      society_uuid:
+        type: string
+        description: UUID of the Society the User belongs to
+      family_uuid:
+        type: string
+        description: UUID of the Family the User belongs to
+      date_created:
+        type: string
+        description: Date in UTC Zulu Format
+      date_updated:
+        type: string
+        description: Date in UTC Zulu Format
+      status:
+        type: string
+        description: Status of the User's Account
+        default: guest
+        enum:
+          - verified
+          - guest
