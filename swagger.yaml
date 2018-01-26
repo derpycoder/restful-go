@@ -22,6 +22,11 @@ consumes:
   - application/json
 produces:
   - application/json
+x-servers:
+  - url: custom-library-164415.appspot.com/v1
+    description: Prod Server
+  - url: custom-library-164415.appspot.com/v0
+    description: Dev Server
 paths:
   /users:
     post:
@@ -40,7 +45,32 @@ paths:
       responses:
         default:
           description: Operation Successfull
-  '/users/{username}':
+  '/users/{id}/image':
+    post:
+      tags:
+        - Users
+      summary: Upload a Profile Image
+      description: ''
+      operationId: upload-profile-image
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the User
+          required: true
+          type: string
+        - name: file
+          in: formData
+          description: Profile Image
+          required: true
+          type: file
+      responses:
+        '200':
+          description: Image Uploaded Successfully
+  '/users/{id}':
     get:
       tags:
         - Users
@@ -48,7 +78,7 @@ paths:
       description: Only a user can get their whole user data
       operationId: get-user
       parameters:
-        - name: username
+        - name: id
           in: path
           description: The name of the user that needs to be fetched
           required: true
@@ -59,7 +89,7 @@ paths:
           schema:
             $ref: '#/definitions/User'
         '400':
-          description: Invalid username supplied
+          description: Invalid User ID supplied
         '404':
           description: User not found
     put:
@@ -69,7 +99,7 @@ paths:
       description: Only the specific user can updated the data
       operationId: update-user
       parameters:
-        - name: username
+        - name: id
           in: path
           description: The name of the user that needs to be updated
           required: true
@@ -82,7 +112,7 @@ paths:
             $ref: '#/definitions/User'
       responses:
         '400':
-          description: Invalid user supplied
+          description: Invalid User ID supplied
         '404':
           description: User not found
     delete:
@@ -92,14 +122,14 @@ paths:
       description: Only a Society Admin can delete the user
       operationId: delete-user
       parameters:
-        - name: username
+        - name: id
           in: path
           description: The name of the user that needs to be deleted
           required: true
           type: string
       responses:
         '400':
-          description: Invalid username supplied
+          description: Invalid User ID supplied
         '404':
           description: User not found
 securityDefinitions:
@@ -115,27 +145,27 @@ definitions:
     properties:
       id:
         type: string
-        description: Id can be used for further queries
-      firstName:
+        description: ID can be used for further queries
+      firstname:
         type: string
         description: First Name of the User
-      middleName:
+      middlename:
         type: string
         description: Middle Name of the User
-      lastName:
+      lastname:
         type: string
         description: Last Name of the User
       email_ids:
         type: array
         items:
           type: string
-        description: Email Ids
+        description: Validated Email Ids
       phone_numbers:
         type: array
         items:
           type: number
           format: int32
-        description: Unformatted Phone Number
+        description: Unformatted Phone Numbers
       dob:
         type: string
         description: Date of Birth in UTC Zulu Time
@@ -146,3 +176,19 @@ definitions:
         enum:
           - owner
           - member
+      image_url:
+        type: string
+        description: User's Profile Photo
+      blood_group:
+        type: string
+        description: Blood Group of the User
+        default: A+
+        enum:
+          - O−
+          - O+
+          - A−
+          - A+
+          - B−
+          - B+
+          - AB−
+          - AB+
