@@ -79,6 +79,7 @@ paths:
       operationId: get-user
       parameters:
         - name: uuid
+          format: uuid
           in: path
           description: The name of the user that needs to be fetched
           required: true
@@ -100,6 +101,7 @@ paths:
       operationId: update-user
       parameters:
         - name: uuid
+          format: uuid
           in: path
           description: The name of the user that needs to be updated
           required: true
@@ -123,6 +125,7 @@ paths:
       operationId: delete-user
       parameters:
         - name: uuid
+          format: uuid
           in: path
           description: The name of the user that needs to be deleted
           required: true
@@ -145,6 +148,7 @@ definitions:
     properties:
       uuid:
         type: string
+        format: uuid
         description: UUID can be used for further queries
       firstname:
         type: string
@@ -159,6 +163,7 @@ definitions:
         type: array
         items:
           type: string
+          format: email
         description: Validated Email Ids
       phone_numbers:
         type: array
@@ -168,6 +173,7 @@ definitions:
         description: Unformatted Phone Numbers
       dob:
         type: string
+        format: date
         description: Date of Birth in UTC Zulu Format
       role:
         type: string
@@ -178,6 +184,7 @@ definitions:
           - member
       image_url:
         type: string
+        format: uri
         description: User's Profile Photo
       blood_group:
         type: string
@@ -194,15 +201,19 @@ definitions:
           - AB+
       society_uuid:
         type: string
+        format: uuid
         description: UUID of the Society the User belongs to
       family_uuid:
         type: string
+        format: uuid
         description: UUID of the Family the User belongs to
       date_created:
         type: string
+        format: date-time
         description: Date in UTC Zulu Format
       date_updated:
         type: string
+        format: date-time
         description: Date in UTC Zulu Format
       status:
         type: string
