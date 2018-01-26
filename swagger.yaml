@@ -16,6 +16,7 @@ tags:
   - name: Users
     description: Home for every query related to Users
 schemes:
+  - http
   - https
 consumes:
   - application/json
@@ -28,7 +29,7 @@ paths:
         - Users
       summary: Create
       description: Maybe only Society Admin can create an User
-      operationId: createUser
+      operationId: create-user
       parameters:
         - in: body
           name: body
@@ -44,12 +45,12 @@ paths:
       tags:
         - Users
       summary: Read
-      description: ''
-      operationId: getUserByName
+      description: Only a user can get their whole user data
+      operationId: get-user
       parameters:
         - name: username
           in: path
-          description: 'The name that needs to be fetched. Use user1 for testing. '
+          description: The name of the user that needs to be fetched
           required: true
           type: string
       responses:
@@ -65,12 +66,12 @@ paths:
       tags:
         - Users
       summary: Update
-      description: This can only be done by the logged in user.
-      operationId: updateUser
+      description: Only the specific user can updated the data
+      operationId: update-user
       parameters:
         - name: username
           in: path
-          description: name that need to be updated
+          description: The name of the user that needs to be updated
           required: true
           type: string
         - in: body
@@ -88,12 +89,12 @@ paths:
       tags:
         - Users
       summary: Delete
-      description: This can only be done by the logged in user.
-      operationId: deleteUser
+      description: Only a Society Admin can delete the user
+      operationId: delete-user
       parameters:
         - name: username
           in: path
-          description: The name that needs to be deleted
+          description: The name of the user that needs to be deleted
           required: true
           type: string
       responses:
@@ -125,17 +126,23 @@ definitions:
         type: string
         description: Last Name of the User
       email_ids:
-        type: string
+        type: array
+        items:
+          type: string
         description: Email Ids
       phone_numbers:
-        type: string
+        type: array
+        items:
+          type: number
+          format: int32
         description: Unformatted Phone Number
       dob:
         type: string
-        description: Date of Birth
-      userStatus:
-        type: integer
-        format: int32
-        description: User Status
-    xml:
-      name: User
+        description: Date of Birth in UTC Zulu Time
+      role:
+        type: string
+        description: Role of the User
+        default: member
+        enum:
+          - owner
+          - member
