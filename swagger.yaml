@@ -43,8 +43,8 @@ paths:
           schema:
             $ref: '#/definitions/User'
       responses:
-        '200':
-          description: User Created Successfully
+        '201':
+          description: Created
           examples:
             application/json:
               uuid: 8888-7777-5555
@@ -89,8 +89,8 @@ paths:
           required: true
           type: file
       responses:
-        '200':
-          description: Image Uploaded Successfully
+        '201':
+          description: Created
   '/users/{uuid}':
     get:
       tags:
@@ -107,13 +107,13 @@ paths:
           type: string
       responses:
         '200':
-          description: Operation Successfull
+          description: OK
           schema:
             $ref: '#/definitions/User'
         '400':
-          description: Invalid User UUID supplied
+          description: Bad Request
         '404':
-          description: User not found
+          description: Not Found
     put:
       tags:
         - Users
@@ -135,9 +135,9 @@ paths:
             $ref: '#/definitions/User'
       responses:
         '400':
-          description: Invalid User UUID supplied
+          description: Bad Request
         '404':
-          description: User not found
+          description: Not Found
     delete:
       tags:
         - Users
@@ -153,9 +153,9 @@ paths:
           type: string
       responses:
         '400':
-          description: Invalid User UUID supplied
+          description: Bad Request
         '404':
-          description: User not found
+          description: Not Found
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
