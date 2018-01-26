@@ -54,7 +54,7 @@ paths:
               email_ids:
                 - user@example.com
               phone_numbers:
-                - 9998887777
+                - '9998887777'
               dob: '2018-01-26'
               role: member
               image_url: 'http://example.com/profile.jpg'
@@ -189,8 +189,7 @@ definitions:
       phone_numbers:
         type: array
         items:
-          type: integer
-          format: int32
+          type: string
           pattern: '^\d{10}$'
         description: Unformatted Phone Numbers
       dob:
@@ -252,7 +251,7 @@ definitions:
       email_ids:
         - user@example.com
       phone_numbers:
-        - 9998887777
+        - '9998887777'
       dob: '2018-01-26'
       role: member
       image_url: 'http://example.com/profile.jpg'
