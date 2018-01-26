@@ -44,20 +44,20 @@ paths:
             $ref: '#/definitions/User'
       responses:
         '200':
-          description: Yay User Created Successfully
+          description: User Created Successfully
           examples:
             application/json:
               uuid: 8888-7777-5555
-              firstname: Tarak
-              middlename: ''
-              lastname: Mehta
+              firstname: John
+              middlename: null
+              lastname: Doe
               email_ids:
                 - user@example.com
               phone_numbers:
                 - 9998887777
               dob: '2018-01-26'
               role: member
-              image_url: 'http://example.com/mew.jpg'
+              image_url: 'http://example.com/profile.jpg'
               blood_gropu: A+
               society_uuid: 8888-7777-4444
               family_uuid: 8888-6666-3333
@@ -244,3 +244,21 @@ definitions:
         enum:
           - verified
           - guest
+    example:
+      uuid: null
+      firstname: John
+      middlename: null
+      lastname: Doe
+      email_ids:
+        - user@example.com
+      phone_numbers:
+        - 9998887777
+      dob: '2018-01-26'
+      role: member
+      image_url: 'http://example.com/profile.jpg'
+      blood_gropu: A+
+      society_uuid: 8888-7777-4444
+      family_uuid: 8888-6666-3333
+      date_created: null
+      date_updated: null
+      status: guest
