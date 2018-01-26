@@ -7,7 +7,7 @@ info:
     name: VoraknoTech
     email: reachus@voraknotech.com
 externalDocs:
-  description: Beautiful Docs
+  description: Documentation
   url: >-
     http://rebilly.github.io/ReDoc/?url=http://www.abhijit-kar.com/unite-society/swagger.yaml
 host: custom-library-164415.appspot.com
