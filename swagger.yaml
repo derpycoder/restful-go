@@ -16,8 +16,8 @@ tags:
   - name: Users
     description: Home for every query related to Users
 schemes:
-  - http
   - https
+  - http
 consumes:
   - application/json
 produces:
@@ -45,7 +45,7 @@ paths:
       responses:
         default:
           description: Operation Successfull
-  '/users/{id}/image':
+  '/users/{uuid}/image':
     post:
       tags:
         - Users
@@ -57,9 +57,9 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: id
+        - name: uuid
           in: path
-          description: ID of the User
+          description: UUID of the User
           required: true
           type: string
         - name: file
@@ -70,7 +70,7 @@ paths:
       responses:
         '200':
           description: Image Uploaded Successfully
-  '/users/{id}':
+  '/users/{uuid}':
     get:
       tags:
         - Users
@@ -78,7 +78,7 @@ paths:
       description: Only a user can get their whole user data
       operationId: get-user
       parameters:
-        - name: id
+        - name: uuid
           in: path
           description: The name of the user that needs to be fetched
           required: true
@@ -89,7 +89,7 @@ paths:
           schema:
             $ref: '#/definitions/User'
         '400':
-          description: Invalid User ID supplied
+          description: Invalid User UUID supplied
         '404':
           description: User not found
     put:
@@ -99,7 +99,7 @@ paths:
       description: Only the specific user can updated the data
       operationId: update-user
       parameters:
-        - name: id
+        - name: uuid
           in: path
           description: The name of the user that needs to be updated
           required: true
@@ -112,7 +112,7 @@ paths:
             $ref: '#/definitions/User'
       responses:
         '400':
-          description: Invalid User ID supplied
+          description: Invalid User UUID supplied
         '404':
           description: User not found
     delete:
@@ -122,14 +122,14 @@ paths:
       description: Only a Society Admin can delete the user
       operationId: delete-user
       parameters:
-        - name: id
+        - name: uuid
           in: path
           description: The name of the user that needs to be deleted
           required: true
           type: string
       responses:
         '400':
-          description: Invalid User ID supplied
+          description: Invalid User UUID supplied
         '404':
           description: User not found
 securityDefinitions:
@@ -143,9 +143,9 @@ definitions:
   User:
     type: object
     properties:
-      id:
+      uuid:
         type: string
-        description: ID can be used for further queries
+        description: UUID can be used for further queries
       firstname:
         type: string
         description: First Name of the User
