@@ -204,6 +204,8 @@ definitions:
         items:
           type: string
           pattern: '^\d{10}$'
+          minLength: 10
+          maxLength: 10
         description: 10 Digit Unformatted Phone Numbers
       dob:
         type: string
