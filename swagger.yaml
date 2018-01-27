@@ -166,6 +166,14 @@ security:
 definitions:
   User:
     type: object
+    required:
+      - firstname
+      - lastname
+      - dob
+      - society_uuid
+      - family_uuid
+      - date_created
+      - date_updated
     properties:
       uuid:
         type: string
@@ -258,6 +266,6 @@ definitions:
       blood_group: A+
       society_uuid: 8888-7777-4444
       family_uuid: 8888-6666-3333
-      date_created: null
-      date_updated: null
+      date_created: '2018-01-26T13:26:53.557Z'
+      date_updated: '2018-01-26T13:26:53.557Z'
       status: guest
