@@ -132,6 +132,8 @@ paths:
           schema:
             $ref: '#/definitions/User'
       responses:
+        '204':
+          description: Updated
         '400':
           description: Bad Request
         '404':
@@ -150,6 +152,8 @@ paths:
           required: true
           type: string
       responses:
+        '204':
+          description: Deleted
         '400':
           description: Bad Request
         '404':
