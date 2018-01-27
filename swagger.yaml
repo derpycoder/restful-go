@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
+  title: Unite Society
   description: '**Work In Progress**<br/>**API Key** is the same as the API Endpoint'
   version: 0.0.1
-  title: Unite Society
   contact:
     name: VoraknoTech
     email: reachus@voraknotech.com
