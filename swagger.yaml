@@ -16,7 +16,7 @@ tags:
   - name: Users
     description: Home for every query related to Users
 schemes:
-  - http
+  - https
 securityDefinitions:
   ApiKey:
     type: apiKey
@@ -69,14 +69,14 @@ paths:
               phone_numbers:
                 - '9998887777'
               dob: '2018-01-26'
-              role: member
+              role: MEMBER
               image_url: 'http://example.com/profile.jpg'
-              blood_group: a_positive
+              blood_group: A_POSITIVE
               society_uuid: 2488999e-d664-4e07-8078-55c5d29a7e97
               family_uuid: 34beb905-aae9-4e21-951d-6748168b40b6
               date_created: '2018-01-26T13:26:53.557Z'
               date_updated: '2018-01-26T13:26:53.557Z'
-              status: guest
+              status: PENDING
   '/users/{uuid}/image':
     post:
       tags:
@@ -277,10 +277,10 @@ definitions:
       role:
         type: string
         description: Role of the User
-        default: member
+        default: MEMBER
         enum:
-          - owner
-          - member
+          - OWNER
+          - MEMBER
       image_url:
         type: string
         format: uri
@@ -289,16 +289,16 @@ definitions:
       blood_group:
         type: string
         description: Blood Group of the User
-        default: a_positive
+        default: A_POSITIVE
         enum:
-          - o_negative
-          - o_positive
-          - a_negative
-          - a_positive
-          - b_negative
-          - b_positive
-          - ab_negative
-          - ab_positive
+          - O_NEGATIVE
+          - O_POSITIVE
+          - A_NEGATIVE
+          - A_POSITIVE
+          - B_NEGATIVE
+          - B_POSITIVE
+          - AB_NEGATIVE
+          - AB_POSITIVE
       society_uuid:
         type: string
         format: uuid4
@@ -318,10 +318,10 @@ definitions:
       status:
         type: string
         description: Status of the User's Account
-        default: guest
+        default: PENDING
         enum:
-          - verified
-          - guest
+          - VERIFIED
+          - PENDING
     example:
       firstname: John
       middlename: null
@@ -331,11 +331,11 @@ definitions:
       phone_numbers:
         - '9998887777'
       dob: '2018-01-26'
-      role: member
+      role: MEMBER
       image_url: 'http://example.com/profile.jpg'
-      blood_group: a_positive
+      blood_group: A_POSITIVE
       society_uuid: 2488999e-d664-4e07-8078-55c5d29a7e97
       family_uuid: 34beb905-aae9-4e21-951d-6748168b40b6
       date_created: '2018-01-26T13:26:53.557Z'
       date_updated: '2018-01-26T13:26:53.557Z'
-      status: guest
+      status: PENDING
