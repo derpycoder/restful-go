@@ -16,8 +16,14 @@ tags:
   - name: Users
     description: Home for every query related to Users
 schemes:
-  - https
   - http
+securityDefinitions:
+  ApiKey:
+    type: apiKey
+    name: api_key
+    in: header
+security:
+  - ApiKey: []
 consumes:
   - application/json
 produces:
@@ -51,10 +57,12 @@ paths:
       responses:
         '201':
           description: Created
+          schema:
+            $ref: '#/definitions/User'
           examples:
             application/json:
               firstname: John
-              middlename: null
+              middlename: 'null'
               lastname: Doe
               email_ids:
                 - user@example.com
@@ -63,7 +71,7 @@ paths:
               dob: '2018-01-26'
               role: member
               image_url: 'http://example.com/profile.jpg'
-              blood_group: A+
+              blood_group: a_positive
               society_uuid: 2488999e-d664-4e07-8078-55c5d29a7e97
               family_uuid: 34beb905-aae9-4e21-951d-6748168b40b6
               date_created: '2018-01-26T13:26:53.557Z'
@@ -219,13 +227,6 @@ paths:
           description: Bad Request
         '404':
           description: Not Found
-securityDefinitions:
-  ApiKeyAuth:
-    type: apiKey
-    name: unite_society_api_key
-    in: header
-security:
-  - ApiKeyAuth: []
 definitions:
   User:
     type: object
@@ -288,16 +289,16 @@ definitions:
       blood_group:
         type: string
         description: Blood Group of the User
-        default: A+
+        default: a_positive
         enum:
-          - O−
-          - O+
-          - A−
-          - A+
-          - B−
-          - B+
-          - AB−
-          - AB+
+          - o_negative
+          - o_positive
+          - a_negative
+          - a_positive
+          - b_negative
+          - b_positive
+          - ab_negative
+          - ab_positive
       society_uuid:
         type: string
         format: uuid4
@@ -332,7 +333,7 @@ definitions:
       dob: '2018-01-26'
       role: member
       image_url: 'http://example.com/profile.jpg'
-      blood_group: A+
+      blood_group: a_positive
       society_uuid: 2488999e-d664-4e07-8078-55c5d29a7e97
       family_uuid: 34beb905-aae9-4e21-951d-6748168b40b6
       date_created: '2018-01-26T13:26:53.557Z'

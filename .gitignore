@@ -1,5 +1,6 @@
 # Custom
-gen
+models
+restapi
 
 *~
 *.pyc
