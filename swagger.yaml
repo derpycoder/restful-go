@@ -178,6 +178,7 @@ definitions:
         type: string
         format: uuid
         x-nullable: true
+        readOnly: true
         description: UUID can be used for further queries
       firstname:
         type: string
@@ -257,7 +258,6 @@ definitions:
           - verified
           - guest
     example:
-      uuid: null
       firstname: John
       middlename: null
       lastname: Doe
