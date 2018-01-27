@@ -168,7 +168,6 @@ definitions:
     type: object
     required:
       - firstname
-      - lastname
       - dob
       - society_uuid
       - family_uuid
@@ -178,28 +177,33 @@ definitions:
       uuid:
         type: string
         format: uuid
+        x-nullable: true
         description: UUID can be used for further queries
       firstname:
         type: string
         description: First Name of the User
       middlename:
         type: string
+        x-nullable: true
         description: Middle Name of the User
       lastname:
         type: string
+        x-nullable: true
         description: Last Name of the User
       email_ids:
         type: array
         items:
           type: string
           format: email
+          x-nullable: true
         description: Validated Email Ids
       phone_numbers:
         type: array
         items:
           type: string
           pattern: '^\d{10}$'
-        description: Unformatted Phone Numbers
+          x-nullable: true
+        description: 10 Digit Unformatted Phone Numbers
       dob:
         type: string
         format: date
@@ -214,6 +218,7 @@ definitions:
       image_url:
         type: string
         format: uri
+        x-nullable: true
         description: User's Profile Photo
       blood_group:
         type: string
