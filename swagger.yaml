@@ -192,17 +192,17 @@ definitions:
         description: Last Name of the User
       email_ids:
         type: array
+        x-nullable: true
         items:
           type: string
           format: email
-          x-nullable: true
         description: Validated Email Ids
       phone_numbers:
         type: array
+        x-nullable: true
         items:
           type: string
           pattern: '^\d{10}$'
-          x-nullable: true
         description: 10 Digit Unformatted Phone Numbers
       dob:
         type: string
