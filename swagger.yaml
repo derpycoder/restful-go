@@ -64,8 +64,6 @@ paths:
               date_created: '2018-01-26T13:26:53.557Z'
               date_updated: '2018-01-26T13:26:53.557Z'
               status: guest
-        default:
-          description: Operation Successfull
   '/users/{uuid}/image':
     post:
       tags:
