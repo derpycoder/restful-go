@@ -61,7 +61,7 @@ type User struct {
 
 	// ID can be used for further queries
 	// Read Only: true
-	id *datastore.Key `datastore:"__key__" json:"id"`
+	Id *datastore.Key `datastore:"__key__" json:"id"`
 }
 
 func (u *User) MarshalJSON() ([]byte, error) {
@@ -83,11 +83,12 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+var projectID = "chrome-setup-158308"
+
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
 
 	// Set your Google Cloud Platform project ID.
-	projectID := "chrome-setup-158308"
 
 	// Creates a client.
 	client, err := datastore.NewClient(ctx, projectID)
@@ -120,6 +121,17 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
+	// ctx := appengine.NewContext(r)
+
+	// client, err := datastore.NewClient(ctx, projectID)
+	// if err != nil {
+	// 	log.Fatalf("Failed to create client: %v", err)
+	// 	fmt.Printf("Failed")
+	// }
+
+	// var user *User
+
+	// err := client.Get(ctx, , &user)
 	w.WriteHeader(http.StatusOK)
 }
 
