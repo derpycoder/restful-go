@@ -6,7 +6,7 @@ import (
 
 	"google.golang.org/appengine"
 
-	"github.com/abhijit-kar/unite-society/apis"
+	apis "github.com/abhijit-kar/unite-society/apis"
 )
 
 func main() {
@@ -17,6 +17,4 @@ func main() {
 	http.Handle("/", router)
 
 	appengine.Main()
-
-	// log.Fatal(http.ListenAndServe(":8080", router))
 }
