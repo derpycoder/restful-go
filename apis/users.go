@@ -64,6 +64,17 @@ type User struct {
 	id *datastore.Key `datastore:"__key__" json:"id"`
 }
 
+func (u *User) MarshalJSON() ([]byte, error) {
+	type marshalledUser User
+	return json.Marshal(&struct {
+		Dob string `datastore:"dob" json:"dob"`
+		*marshalledUser
+	}{
+		Dob:            time.Time(u.Dob).Format("2006-01-02"),
+		marshalledUser: (*marshalledUser)(u),
+	})
+}
+
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
