@@ -35,6 +35,18 @@ x-servers:
     description: Dev Server
 paths:
   /users:
+    get:
+      tags:
+        - Users
+      deprecated: false
+      summary: Get All, Just for Test
+      description: Get All the Users
+      operationId: get-all-users
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Users'
     post:
       tags:
         - Users
@@ -228,6 +240,10 @@ paths:
         '404':
           description: Not Found
 definitions:
+  Users:
+    type: array
+    items:
+      $ref: '#/definitions/User'
   User:
     type: object
     required:
