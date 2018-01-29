@@ -8,60 +8,64 @@ import (
 	"time"
 
 	"cloud.google.com/go/datastore"
+	"github.com/gorilla/mux"
 	"google.golang.org/appengine"
 )
 
 type User struct {
-	AvatarURL string `datastore:"avatar_url,omitempty" json:"avatar_url,omitempty"`
-
-	// Blood Group of the User
-	BloodGroup string `datastore:"blood_group,omitempty" json:"blood_group,omitempty`
-
-	// Date in UTC Zulu Format
-	// Required: true
-	DateCreated time.Time `datastore:"date_created" json:"date_created"`
-
-	// Date in UTC Zulu Format
-	// Required: true
-	DateUpdated time.Time `datastore:"date_updated" json:"date_updated"`
-
-	// Date of Birth in UTC Zulu Format
-	// Required: true
-	Dob time.Time `datastore:"dob" json:"dob"`
-
-	// Validated Email Ids
-	EmailIds []string `datastore:"email_ids" json:"email_ids"`
-
-	// ID of the Family the User belongs to
-	// Required: true
-	FamilyID string `datastore:"family_id" json:"family_id"`
+	// ID can be used for further queries
+	// Read Only: true
+	UUID string `datastore:"uuid" json:"uuid"`
 
 	// First Name of the User
 	// Required: true
 	Firstname string `datastore:"firstname" json:"firstname"`
 
+	// Middle Name of the User
+	Middlename string `datastore:"middlename,omitempty" json:"middlename,omitempty"`
+
 	// Last Name of the User
 	Lastname string `datastore:"lastname,omitempty" json:"lastname,omitempty"`
 
-	// Middle Name of the User
-	Middlename string `datastore:"middlename,omitempty" json:"middlename,omitempty"`
+	// Validated Email Ids
+	EmailIds []string `datastore:"email_ids" json:"email_ids"`
 
 	// 10 Digit Unformatted Phone Numbers
 	PhoneNumbers []string `datastore:"phone_numbers" json:"phone_numbers"`
 
+	// Date of Birth in UTC Zulu Format
+	// Required: true
+	Dob time.Time `datastore:"dob" json:"dob"`
+
 	// Role of the User
 	Role string `datastore:"role,omitempty" json:"role,omitempty"`
 
-	// ID of the Society the User belongs to
+	// User's Profile Photo, Needs to be Uploaded
+	// Read Only: true
+	AvatarURL string `datastore:"avatar_url,omitempty" json:"avatar_url,omitempty"`
+
+	// Blood Group of the User
+	BloodGroup string `datastore:"blood_group,omitempty" json:"blood_group,omitempty"`
+
+	// UUID of the Society the User belongs to
 	// Required: true
-	SocietyID string `datastore:"society_id" json:"society_id"`
+	SocietyUUID string `datastore:"society_uuid" json:"society_uuid"`
+
+	// UUID of the Family the User belongs to
+	// Required: true
+	FamilyUUID string `datastore:"family_uuid" json:"family_uuid"`
+
+	// Date in UTC Zulu Format
+	// Read Only: true
+	DateCreated time.Time `datastore:"date_created" json:"date_created"`
+
+	// Date in UTC Zulu Format
+	// Read Only: true
+	DateUpdated time.Time `datastore:"date_updated" json:"date_updated"`
 
 	// Status of the User's Account
-	Status string `datastore:"status,omitempty" json:"status,omitempty"`
-
-	// ID can be used for further queries
 	// Read Only: true
-	Id *datastore.Key `datastore:"__key__" json:"id"`
+	Status string `datastore:"status,omitempty" json:"status,omitempty"`
 }
 
 func (u *User) MarshalJSON() ([]byte, error) {
@@ -121,17 +125,33 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
-	// ctx := appengine.NewContext(r)
+	ctx := appengine.NewContext(r)
+	params := mux.Vars(r)
 
-	// client, err := datastore.NewClient(ctx, projectID)
-	// if err != nil {
-	// 	log.Fatalf("Failed to create client: %v", err)
-	// 	fmt.Printf("Failed")
-	// }
+	client, err := datastore.NewClient(ctx, projectID)
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+		fmt.Printf("Failed")
+	}
 
-	// var user *User
+	var user = new(User)
 
-	// err := client.Get(ctx, , &user)
+	key := datastore.NameKey("Users", params["uuid"], nil)
+
+	key.Namespace = "NeverLand"
+
+	err = client.Get(ctx, key, user)
+	if err != nil {
+		w.WriteHeader(http.StatusFailedDependency)
+		log.Fatalf("Unable to Get: %v", err)
+	}
+
+	json, err := json.Marshal(user)
+	if err != nil {
+		log.Fatalf("Bad Result: %v", err)
+		w.WriteHeader(http.StatusGone)
+	}
+	w.Write(append([]byte("HEllo"), json...))
 	w.WriteHeader(http.StatusOK)
 }
 
