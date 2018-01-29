@@ -71,7 +71,7 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/User'
-  '/users/{uuid}/avatar':
+  '/users/{id}/avatar':
     post:
       tags:
         - Users
@@ -83,9 +83,9 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: uuid
+        - name: id
           in: path
-          description: UUID of the User
+          description: ID of the User
           required: true
           type: string
         - name: file
@@ -102,7 +102,7 @@ paths:
       responses:
         '201':
           description: Uploaded
-  '/users/{uuid}':
+  '/users/{id}':
     get:
       tags:
         - Users
@@ -110,9 +110,9 @@ paths:
       description: Only a user can get their whole user data
       operationId: get-user
       parameters:
-        - name: uuid
+        - name: id
           in: path
-          description: The UUID of the user that needs to be fetched
+          description: The ID of the user that needs to be fetched
           required: true
           type: string
       x-code-samples:
@@ -137,9 +137,9 @@ paths:
       description: Only the specific user can updated the data
       operationId: update-user
       parameters:
-        - name: uuid
+        - name: id
           in: path
-          description: The UUID of the user that needs to be updated
+          description: The ID of the user that needs to be updated
           required: true
           type: string
         - in: body
@@ -168,9 +168,9 @@ paths:
       description: Few targeted properties can be updated
       operationId: patch-user
       parameters:
-        - name: uuid
+        - name: id
           in: path
-          description: The UUID of the user that needs to be updated
+          description: The ID of the user that needs to be updated
           required: true
           type: string
         - in: body
@@ -199,9 +199,9 @@ paths:
       description: Only a Society Admin can delete the user
       operationId: delete-user
       parameters:
-        - name: uuid
+        - name: id
           in: path
-          description: The UUID of the user that needs to be deleted
+          description: The ID of the user that needs to be deleted
           required: true
           type: string
       x-code-samples:
@@ -227,14 +227,15 @@ definitions:
     required:
       - firstname
       - dob
-      - society_uuid
-      - family_uuid
+      - parent_id
     properties:
-      uuid:
+      id:
         type: string
-        format: uuid4
         readOnly: true
         description: ID can be used for further queries
+      parent_id:
+        type: string
+        description: From where to inherit
       firstname:
         type: string
         description: First Name of the User
@@ -278,7 +279,7 @@ definitions:
         format: uri
         x-nullable: true
         readOnly: true
-        description: User's Profile Photo, Needs to be Uploaded
+        description: 'User''s Profile Photo, Needs to be Uploaded'
       blood_group:
         type: string
         description: Blood Group of the User
@@ -292,14 +293,6 @@ definitions:
           - B_POSITIVE
           - AB_NEGATIVE
           - AB_POSITIVE
-      society_uuid:
-        type: string
-        format: uuid4
-        description: UUID of the Society the User belongs to
-      family_uuid:
-        type: string
-        format: uuid4
-        description: UUID of the Family the User belongs to
       date_created:
         type: string
         format: date-time
