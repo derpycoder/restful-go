@@ -151,7 +151,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Bad Result: %v", err)
 		w.WriteHeader(http.StatusGone)
 	}
-	w.Write(append([]byte("HEllo"), json...))
+	w.Write(json)
 	w.WriteHeader(http.StatusOK)
 }
 
