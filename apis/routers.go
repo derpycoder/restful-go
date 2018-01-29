@@ -55,7 +55,7 @@ var routes = Routes{
 	Route{
 		"DeleteUser",
 		"DELETE",
-		"/v1/users/{uuid}",
+		"/v1/users/{id}",
 		withCORS(DeleteUser),
 	},
 
@@ -69,28 +69,28 @@ var routes = Routes{
 	Route{
 		"GetUser",
 		"GET",
-		"/v1/users/{uuid}",
+		"/v1/users/{id}",
 		withCORS(GetUser),
 	},
 
 	Route{
 		"PatchUser",
 		"PATCH",
-		"/v1/users/{uuid}",
+		"/v1/users/{id}",
 		withCORS(PatchUser),
 	},
 
 	Route{
 		"UpdateUser",
 		"PUT",
-		"/v1/users/{uuid}",
+		"/v1/users/{id}",
 		withCORS(UpdateUser),
 	},
 
 	Route{
 		"UploadProfileImage",
 		"POST",
-		"/v1/users/{uuid}/image",
+		"/v1/users/{id}/image",
 		withCORS(UploadProfileImage),
 	},
 }
