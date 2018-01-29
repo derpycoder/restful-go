@@ -3,6 +3,7 @@ package apis
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
@@ -12,10 +13,16 @@ import (
 	"google.golang.org/appengine"
 )
 
+var projectID = "chrome-setup-158308"
+
 type User struct {
-	// ID can be used for further queries
+	// Auto Generated
 	// Read Only: true
-	UUID string `datastore:"uuid" json:"uuid"`
+	ID *datastore.Key `datastore:"__key__" json:"id"`
+
+	// From where to inherit
+	// Required: true
+	ParentID string `datastore:"-" json:"parent_id"`
 
 	// First Name of the User
 	// Required: true
@@ -47,14 +54,6 @@ type User struct {
 	// Blood Group of the User
 	BloodGroup string `datastore:"blood_group,omitempty" json:"blood_group,omitempty"`
 
-	// UUID of the Society the User belongs to
-	// Required: true
-	SocietyUUID string `datastore:"society_uuid" json:"society_uuid"`
-
-	// UUID of the Family the User belongs to
-	// Required: true
-	FamilyUUID string `datastore:"family_uuid" json:"family_uuid"`
-
 	// Date in UTC Zulu Format
 	// Read Only: true
 	DateCreated time.Time `datastore:"date_created" json:"date_created"`
@@ -80,6 +79,53 @@ func (u *User) MarshalJSON() ([]byte, error) {
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
+	ctx := appengine.NewContext(r)
+
+	client, err := datastore.NewClient(ctx, projectID)
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+		fmt.Printf("Failed")
+	}
+
+	b, _ := ioutil.ReadAll(r.Body)
+
+	var user = new(User)
+
+	err = json.Unmarshal(b, user)
+	if err != nil {
+		log.Fatalf("Failed to Unmarshall: %v", err)
+		fmt.Printf("Failed")
+	}
+
+	grandParentKey := datastore.IDKey("Society", 5066549580791808, nil)
+	grandParentKey.Namespace = "NeverLand"
+	parentKey := datastore.IDKey("Family", 5668600916475904, grandParentKey)
+	parentKey.Namespace = "NeverLand"
+	// parentKey, err := datastore.DecodeKey(*user.ParentID)
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusFailedDependency)
+	// 	log.Fatalf("Unable to Decode Key: %v", err)
+	// }
+
+	key := datastore.IDKey("Users", 0, parentKey)
+	key.Namespace = "NeverLand"
+
+	key, err = client.Put(ctx, key, user)
+	if err != nil {
+		log.Fatalf("Failed to Create: %v", err)
+		fmt.Printf("Failed")
+	}
+
+	user.ParentID = key.String()
+
+	json, err := json.Marshal(user)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	w.Write(json)
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -87,14 +133,9 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-var projectID = "chrome-setup-158308"
-
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
 
-	// Set your Google Cloud Platform project ID.
-
-	// Creates a client.
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
@@ -107,7 +148,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	keys, err := client.GetAll(ctx, query, &users)
 	if err != nil {
-		w.Write([]byte("Errrrrr: " + err.Error()))
+		w.Write([]byte("Query Failed: " + err.Error()))
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -136,9 +177,11 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	var user = new(User)
 
-	key := datastore.NameKey("Users", params["uuid"], nil)
-
-	key.Namespace = "NeverLand"
+	key, err := datastore.DecodeKey(params["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusFailedDependency)
+		log.Fatalf("Unable to Decode Key: %v", err)
+	}
 
 	err = client.Get(ctx, key, user)
 	if err != nil {
