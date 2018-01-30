@@ -235,9 +235,9 @@ definitions:
         description: 10 Digit Unformatted Phone Numbers
       dob:
         type: string
-        format: date
+        format: date-time
         x-nullable: true
-        description: Date of Birth in UTC Zulu Format
+        description: Date of Birth in ISO 8601 UTC Format
       role:
         type: string
         description: Role of the User
@@ -270,12 +270,12 @@ definitions:
         type: string
         format: date-time
         readOnly: true
-        description: Date in UTC Zulu Format
+        description: Date in ISO 8601 UTC Format
       date_updated:
         type: string
         format: date-time
         readOnly: true
-        description: Date in UTC Zulu Format
+        description: Date in ISO 8601 UTC Format
       status:
         type: string
         description: Status of the User's Account
