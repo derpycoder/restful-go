@@ -24,7 +24,7 @@ func NewRouter() *mux.Router {
 		handler = Logger(handler, route.Name)
 
 		router.
-			Methods(route.Method).
+			Methods(route.Method, "OPTIONS").
 			Path(route.Pattern).
 			Name(route.Name).
 			Handler(handler)
@@ -35,52 +35,40 @@ func NewRouter() *mux.Router {
 
 var routes = Routes{
 	Route{
-		"CORSPreflight",
-		"OPTIONS",
-		"/v1/users",
-		nil,
-	},
-	Route{
 		"CreateUser",
 		"POST",
-		"/v1/users",
+		"/v0/users",
 		CreateUser,
 	},
 
 	Route{
 		"DeleteUser",
 		"DELETE",
-		"/v1/users/{id}",
+		"/v0/users/{id}",
 		DeleteUser,
 	},
 	Route{
 		"GetAllUsers",
 		"GET",
-		"/v1/users",
+		"/v0/users",
 		GetAllUsers,
 	},
 	Route{
 		"GetUser",
 		"GET",
-		"/v1/users/{id}",
+		"/v0/users/{id}",
 		GetUser,
-	},
-	Route{
-		"PatchUser",
-		"PATCH",
-		"/v1/users/{id}",
-		PatchUser,
 	},
 	Route{
 		"UpdateUser",
 		"PUT",
-		"/v1/users/{id}",
+		"/v0/users/{id}",
 		UpdateUser,
 	},
 	Route{
 		"UploadProfileImage",
 		"POST",
-		"/v1/users/{id}/image",
+		"/v0/users/{id}/image",
 		UploadProfileImage,
 	},
 }
@@ -94,7 +82,7 @@ func commonHeaders(fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
+		w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, POST, GET, PUT, DELETE")
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 		if r.Method == "OPTIONS" {
