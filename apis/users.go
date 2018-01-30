@@ -2,9 +2,7 @@ package apis
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -83,8 +81,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
-		fmt.Printf("Failed")
+		w.Write([]byte("Failed to create client: " + err.Error()))
+		appendHeader(w, http.StatusServiceUnavailable)
+		return
 	}
 
 	b, _ := ioutil.ReadAll(r.Body)
@@ -93,18 +92,21 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(b, user)
 	if err != nil {
-		log.Fatalf("Failed to Unmarshall: %v", err)
-		fmt.Printf("Failed")
+		w.Write([]byte("Unable to Unmarshal: " + err.Error()))
+		appendHeader(w, http.StatusServiceUnavailable)
+		return
 	}
 
 	grandParentKey := datastore.IDKey("Society", 5066549580791808, nil)
 	grandParentKey.Namespace = "NeverLand"
 	parentKey := datastore.IDKey("Family", 5668600916475904, grandParentKey)
 	parentKey.Namespace = "NeverLand"
+
 	// parentKey, err := datastore.DecodeKey(*user.ParentID)
 	// if err != nil {
-	// 	w.WriteHeader(http.StatusFailedDependency)
-	// 	log.Fatalf("Unable to Decode Key: %v", err)
+	// 	w.Write([]byte("Unable to Decode Key: " + err.Error()))
+	// 	appendHeader(w, http.StatusServiceUnavailable)
+	// 	return
 	// }
 
 	key := datastore.IDKey("Users", 0, parentKey)
@@ -112,8 +114,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	key, err = client.Put(ctx, key, user)
 	if err != nil {
-		log.Fatalf("Failed to Create: %v", err)
-		fmt.Printf("Failed")
+		w.Write([]byte("Failed to create Entity: " + err.Error()))
+		appendHeader(w, http.StatusServiceUnavailable)
+		return
 	}
 
 	user.ParentID = key.String()
@@ -121,16 +124,16 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	json, err := json.Marshal(user)
 	if err != nil {
 		w.Write([]byte(err.Error()))
-		w.WriteHeader(http.StatusNotFound)
+		appendHeader(w, http.StatusNotFound)
 		return
 	}
 
 	w.Write(json)
-	w.WriteHeader(http.StatusOK)
+	appendHeader(w, http.StatusOK)
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	appendHeader(w, http.StatusOK)
 }
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
@@ -138,8 +141,9 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
-		fmt.Printf("Failed")
+		w.Write([]byte("Failed to create client: " + err.Error()))
+		appendHeader(w, http.StatusServiceUnavailable)
+		return
 	}
 
 	query := datastore.NewQuery("Users").Limit(10).Namespace("NeverLand")
@@ -149,19 +153,19 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	keys, err := client.GetAll(ctx, query, &users)
 	if err != nil {
 		w.Write([]byte("Query Failed: " + err.Error()))
-		w.WriteHeader(http.StatusNotFound)
+		appendHeader(w, http.StatusNotFound)
 		return
 	}
 
 	json, err := json.Marshal(users)
 	if err != nil {
 		w.Write([]byte(err.Error()))
-		w.WriteHeader(http.StatusNotFound)
+		appendHeader(w, http.StatusNotFound)
 		return
 	}
 	if len(keys) > 0 {
 		w.Write(json)
-		w.WriteHeader(http.StatusOK)
+		appendHeader(w, http.StatusOK)
 	}
 }
 
@@ -171,41 +175,45 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
-		fmt.Printf("Failed")
+		w.Write([]byte("Failed to create client: " + err.Error()))
+		appendHeader(w, http.StatusServiceUnavailable)
+		return
 	}
 
 	var user = new(User)
 
 	key, err := datastore.DecodeKey(params["id"])
 	if err != nil {
-		w.WriteHeader(http.StatusFailedDependency)
-		log.Fatalf("Unable to Decode Key: %v", err)
+		w.Write([]byte("Unable to Decode Key: " + err.Error()))
+		appendHeader(w, http.StatusFailedDependency)
+		return
 	}
 
 	err = client.Get(ctx, key, user)
 	if err != nil {
-		w.WriteHeader(http.StatusFailedDependency)
-		log.Fatalf("Unable to Get: %v", err)
+		w.Write([]byte("Unable to Get: " + err.Error()))
+		appendHeader(w, http.StatusNotFound)
+		return
 	}
 
 	json, err := json.Marshal(user)
 	if err != nil {
-		log.Fatalf("Bad Result: %v", err)
-		w.WriteHeader(http.StatusGone)
+		w.Write([]byte("Unable to Marshal: " + err.Error()))
+		appendHeader(w, http.StatusServiceUnavailable)
+		return
 	}
 	w.Write(json)
-	w.WriteHeader(http.StatusOK)
+	appendHeader(w, http.StatusOK)
 }
 
 func PatchUser(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	appendHeader(w, http.StatusOK)
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	appendHeader(w, http.StatusOK)
 }
 
 func UploadProfileImage(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	appendHeader(w, http.StatusOK)
 }
