@@ -81,7 +81,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
-		w.Write([]byte("Failed to create client: " + err.Error()))
+		w.Write([]byte("Failed to establish connection with DataStore: " + err.Error()))
 		appendHeader(w, http.StatusServiceUnavailable)
 		return
 	}
@@ -92,22 +92,17 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(b, user)
 	if err != nil {
-		w.Write([]byte("Unable to Unmarshal: " + err.Error()))
+		w.Write([]byte("Unable to convert Response to JSON: " + err.Error()))
 		appendHeader(w, http.StatusServiceUnavailable)
 		return
 	}
 
-	grandParentKey := datastore.IDKey("Society", 5066549580791808, nil)
-	grandParentKey.Namespace = "NeverLand"
-	parentKey := datastore.IDKey("Family", 5668600916475904, grandParentKey)
-	parentKey.Namespace = "NeverLand"
-
-	// parentKey, err := datastore.DecodeKey(*user.ParentID)
-	// if err != nil {
-	// 	w.Write([]byte("Unable to Decode Key: " + err.Error()))
-	// 	appendHeader(w, http.StatusServiceUnavailable)
-	// 	return
-	// }
+	parentKey, err := datastore.DecodeKey(user.ParentID)
+	if err != nil {
+		w.Write([]byte("Unable to Decode Parent ID: " + err.Error()))
+		appendHeader(w, http.StatusServiceUnavailable)
+		return
+	}
 
 	key := datastore.IDKey("Users", 0, parentKey)
 	key.Namespace = "NeverLand"
@@ -119,7 +114,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user.ParentID = key.String()
+	user.ID = key
 
 	json, err := json.Marshal(user)
 	if err != nil {
@@ -129,7 +124,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(json)
-	appendHeader(w, http.StatusOK)
+	appendHeader(w, http.StatusCreated)
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
@@ -141,7 +136,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
-		w.Write([]byte("Failed to create client: " + err.Error()))
+		w.Write([]byte("Failed to establish connection with DataStore: " + err.Error()))
 		appendHeader(w, http.StatusServiceUnavailable)
 		return
 	}
@@ -152,7 +147,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	keys, err := client.GetAll(ctx, query, &users)
 	if err != nil {
-		w.Write([]byte("Query Failed: " + err.Error()))
+		w.Write([]byte("Unable to get any data: " + err.Error()))
 		appendHeader(w, http.StatusNotFound)
 		return
 	}
@@ -175,7 +170,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
-		w.Write([]byte("Failed to create client: " + err.Error()))
+		w.Write([]byte("Failed to establish connection with DataStore: " + err.Error()))
 		appendHeader(w, http.StatusServiceUnavailable)
 		return
 	}
@@ -184,21 +179,21 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	key, err := datastore.DecodeKey(params["id"])
 	if err != nil {
-		w.Write([]byte("Unable to Decode Key: " + err.Error()))
+		w.Write([]byte("Unable to decode ID: " + err.Error()))
 		appendHeader(w, http.StatusFailedDependency)
 		return
 	}
 
 	err = client.Get(ctx, key, user)
 	if err != nil {
-		w.Write([]byte("Unable to Get: " + err.Error()))
+		w.Write([]byte("Unable to get user: " + err.Error()))
 		appendHeader(w, http.StatusNotFound)
 		return
 	}
 
 	json, err := json.Marshal(user)
 	if err != nil {
-		w.Write([]byte("Unable to Marshal: " + err.Error()))
+		w.Write([]byte("Unable to parse request body: " + err.Error()))
 		appendHeader(w, http.StatusServiceUnavailable)
 		return
 	}
