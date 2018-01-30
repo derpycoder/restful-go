@@ -1,8 +1,9 @@
 package apis
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -20,7 +21,7 @@ func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range routes {
 		var handler http.Handler
-		handler = route.HandlerFunc
+		handler = commonHeaders(route.HandlerFunc)
 		handler = Logger(handler, route.Name)
 
 		router.
@@ -33,73 +34,88 @@ func NewRouter() *mux.Router {
 	return router
 }
 
-func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
-}
-
 var routes = Routes{
 	Route{
-		"Index",
-		"GET",
-		"/v1/",
-		withCORS(Index),
+		"CORSPreflight",
+		"OPTIONS",
+		"/v1/users",
+		nil,
 	},
-
 	Route{
 		"CreateUser",
 		"POST",
 		"/v1/users",
-		withCORS(CreateUser),
+		CreateUser,
 	},
 
 	Route{
 		"DeleteUser",
 		"DELETE",
 		"/v1/users/{id}",
-		withCORS(DeleteUser),
+		DeleteUser,
 	},
-
 	Route{
 		"GetAllUsers",
 		"GET",
 		"/v1/users",
-		withCORS(GetAllUsers),
+		GetAllUsers,
 	},
-
 	Route{
 		"GetUser",
 		"GET",
 		"/v1/users/{id}",
-		withCORS(GetUser),
+		GetUser,
 	},
-
 	Route{
 		"PatchUser",
 		"PATCH",
 		"/v1/users/{id}",
-		withCORS(PatchUser),
+		PatchUser,
 	},
-
 	Route{
 		"UpdateUser",
 		"PUT",
 		"/v1/users/{id}",
-		withCORS(UpdateUser),
+		UpdateUser,
 	},
-
 	Route{
 		"UploadProfileImage",
 		"POST",
 		"/v1/users/{id}/image",
-		withCORS(UploadProfileImage),
+		UploadProfileImage,
 	},
 }
 
-func withCORS(fn http.HandlerFunc) http.HandlerFunc {
+type Options struct {
+	Documentation string `json:"documentation"`
+	Endpoint      string `json:"endpoint"`
+}
+
+func appendHeader(w http.ResponseWriter, statusCode int) {
+	w.Header().Set("Status Code", strconv.Itoa(statusCode))
+}
+
+func commonHeaders(fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		fn(w, r)
+
+		if r.Method == "OPTIONS" {
+			options := Options{"To learn how to use this endpoint, please refer", "http://abhijit-kar.com/swagger/"}
+			json, err := json.Marshal(options)
+			if err != nil {
+				w.Write([]byte(err.Error()))
+				appendHeader(w, http.StatusOK)
+				return
+			}
+
+			w.Write(json)
+			appendHeader(w, http.StatusOK)
+			return
+		}
+
+		fn.ServeHTTP(w, r)
 	}
 }
