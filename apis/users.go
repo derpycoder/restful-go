@@ -65,7 +65,7 @@ type User struct {
 }
 
 const (
-	UTCISO8601 = "2006-01-02T15:04:05.000Z"
+	ISO8601 = "2006-01-02T15:04:05.000Z"
 )
 
 func (u *User) MarshalJSON() ([]byte, error) {
@@ -76,9 +76,9 @@ func (u *User) MarshalJSON() ([]byte, error) {
 		DateUpdated string `datastore:"date_updated" json:"date_updated"`
 		*marshalledUser
 	}{
-		DateCreated:    time.Time(u.DateCreated).UTC().Format(UTCISO8601),
-		DateUpdated:    time.Time(u.DateUpdated).UTC().Format(UTCISO8601),
-		Dob:            time.Time(u.Dob).UTC().Format(UTCISO8601),
+		DateCreated:    time.Time(u.DateCreated).UTC().Format(ISO8601),
+		DateUpdated:    time.Time(u.DateUpdated).UTC().Format(ISO8601),
+		Dob:            time.Time(u.Dob).UTC().Format(ISO8601),
 		marshalledUser: (*marshalledUser)(u),
 	})
 }
@@ -257,7 +257,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			return err
 		}
 
-		dateCreated, _ := time.Parse(UTCISO8601, time.Time(oldUser.DateCreated).UTC().Format(UTCISO8601))
+		dateCreated, _ := time.Parse(ISO8601, time.Time(oldUser.DateCreated).UTC().Format(ISO8601))
 		newUser.DateCreated = dateCreated
 		newUser.DateUpdated = time.Now().UTC()
 
