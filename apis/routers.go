@@ -3,7 +3,6 @@ package apis
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -91,10 +90,6 @@ type Options struct {
 	Endpoint      string `json:"endpoint"`
 }
 
-func appendHeader(w http.ResponseWriter, statusCode int) {
-	w.Header().Set("Status Code", strconv.Itoa(statusCode))
-}
-
 func commonHeaders(fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -106,13 +101,11 @@ func commonHeaders(fn http.HandlerFunc) http.HandlerFunc {
 			options := Options{"To learn how to use this endpoint, please refer", "http://abhijit-kar.com/swagger/"}
 			json, err := json.Marshal(options)
 			if err != nil {
-				w.Write([]byte(err.Error()))
-				appendHeader(w, http.StatusOK)
+				http.Error(w, options.Documentation+" "+options.Endpoint, http.StatusUnprocessableEntity)
 				return
 			}
 
 			w.Write(json)
-			appendHeader(w, http.StatusOK)
 			return
 		}
 
