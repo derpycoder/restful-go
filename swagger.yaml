@@ -39,7 +39,7 @@ paths:
       tags:
         - Users
       deprecated: false
-      summary: 'Get All, Just for Test'
+      summary: Get All
       description: Get All the Users
       operationId: get-all-users
       responses:
@@ -56,7 +56,9 @@ paths:
       parameters:
         - in: body
           name: body
-          description: User Object
+          description: >-
+            User Object, User Parent ID
+            CgsiCU5ldmVyTGFuZBISCgdTb2NpZXR5EICAgICAgIAJEhEKBkZhbWlseRCAgICAgPKICg
           required: true
           schema:
             $ref: '#/definitions/User'
@@ -266,11 +268,13 @@ definitions:
       dob:
         type: string
         format: date
+        x-nullable: true
         description: Date of Birth in UTC Zulu Format
       role:
         type: string
         description: Role of the User
         default: MEMBER
+        x-nullable: true
         enum:
           - OWNER
           - MEMBER
@@ -284,6 +288,7 @@ definitions:
         type: string
         description: Blood Group of the User
         default: A_POSITIVE
+        x-nullable: true
         enum:
           - O_NEGATIVE
           - O_POSITIVE
