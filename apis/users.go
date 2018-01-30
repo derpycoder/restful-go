@@ -81,8 +81,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
-		w.Write([]byte("Failed to establish connection with DataStore: " + err.Error()))
-		appendHeader(w, http.StatusServiceUnavailable)
+		http.Error(w, "Failed to establish connection with Database: "+err.Error(), http.StatusServiceUnavailable)
 		return
 	}
 
@@ -92,15 +91,13 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(b, user)
 	if err != nil {
-		w.Write([]byte("Unable to convert Response to JSON: " + err.Error()))
-		appendHeader(w, http.StatusServiceUnavailable)
+		http.Error(w, "Unable to parse Request BODY: "+err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
 
 	parentKey, err := datastore.DecodeKey(user.ParentID)
 	if err != nil {
-		w.Write([]byte("Unable to Decode Parent ID: " + err.Error()))
-		appendHeader(w, http.StatusServiceUnavailable)
+		http.Error(w, "Unable to Decode Parent ID: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -109,8 +106,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	key, err = client.Put(ctx, key, user)
 	if err != nil {
-		w.Write([]byte("Failed to create Entity: " + err.Error()))
-		appendHeader(w, http.StatusServiceUnavailable)
+		http.Error(w, "Failed to create User: "+err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
@@ -118,17 +114,16 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	json, err := json.Marshal(user)
 	if err != nil {
-		w.Write([]byte(err.Error()))
-		appendHeader(w, http.StatusNotFound)
+		http.Error(w, "Unable to convert response to JSON: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	w.Write(json)
-	appendHeader(w, http.StatusCreated)
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	appendHeader(w, http.StatusOK)
+	w.WriteHeader(http.StatusOK)
 }
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
@@ -136,8 +131,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
-		w.Write([]byte("Failed to establish connection with DataStore: " + err.Error()))
-		appendHeader(w, http.StatusServiceUnavailable)
+		http.Error(w, "Failed to establish connection with Database: "+err.Error(), http.StatusServiceUnavailable)
 		return
 	}
 
@@ -147,20 +141,19 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	keys, err := client.GetAll(ctx, query, &users)
 	if err != nil {
-		w.Write([]byte("Unable to get any data: " + err.Error()))
-		appendHeader(w, http.StatusNotFound)
+		http.Error(w, "No Users Found: "+err.Error(), http.StatusNotFound)
 		return
 	}
 
 	json, err := json.Marshal(users)
 	if err != nil {
-		w.Write([]byte(err.Error()))
-		appendHeader(w, http.StatusNotFound)
+		http.Error(w, "Unable to convert response to JSON: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	if len(keys) > 0 {
+		w.WriteHeader(http.StatusOK)
 		w.Write(json)
-		appendHeader(w, http.StatusOK)
 	}
 }
 
@@ -170,8 +163,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	client, err := datastore.NewClient(ctx, projectID)
 	if err != nil {
-		w.Write([]byte("Failed to establish connection with DataStore: " + err.Error()))
-		appendHeader(w, http.StatusServiceUnavailable)
+		http.Error(w, "Failed to establish connection with Database: "+err.Error(), http.StatusServiceUnavailable)
 		return
 	}
 
@@ -179,36 +171,34 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	key, err := datastore.DecodeKey(params["id"])
 	if err != nil {
-		w.Write([]byte("Unable to decode ID: " + err.Error()))
-		appendHeader(w, http.StatusFailedDependency)
+		http.Error(w, "Unable to Decode ID: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = client.Get(ctx, key, user)
 	if err != nil {
-		w.Write([]byte("Unable to get user: " + err.Error()))
-		appendHeader(w, http.StatusNotFound)
+		http.Error(w, "User Not Found: "+err.Error(), http.StatusNotFound)
 		return
 	}
 
 	json, err := json.Marshal(user)
 	if err != nil {
-		w.Write([]byte("Unable to parse request body: " + err.Error()))
-		appendHeader(w, http.StatusServiceUnavailable)
+		http.Error(w, "Unable to convert response to JSON: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
 	w.Write(json)
-	appendHeader(w, http.StatusOK)
 }
 
 func PatchUser(w http.ResponseWriter, r *http.Request) {
-	appendHeader(w, http.StatusOK)
+	w.WriteHeader(http.StatusOK)
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	appendHeader(w, http.StatusOK)
+	w.WriteHeader(http.StatusOK)
 }
 
 func UploadProfileImage(w http.ResponseWriter, r *http.Request) {
-	appendHeader(w, http.StatusOK)
+	w.WriteHeader(http.StatusOK)
 }
