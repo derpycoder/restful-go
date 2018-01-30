@@ -11,7 +11,7 @@ externalDocs:
   url: >-
     http://rebilly.github.io/ReDoc/?url=http://www.abhijit-kar.com/unite-society/swagger.yaml
 host: chrome-setup-158308.appspot.com
-basePath: /v1
+basePath: /v0
 tags:
   - name: Users
     description: Home for every query related to Users
@@ -159,37 +159,6 @@ paths:
       responses:
         '204':
           description: Updated
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-    patch:
-      tags:
-        - Users
-      summary: Patch
-      description: Few targeted properties can be updated
-      operationId: patch-user
-      parameters:
-        - name: id
-          in: path
-          description: The ID of the user that needs to be updated
-          required: true
-          type: string
-        - in: body
-          name: body
-          description: Updated user object
-          required: true
-          schema:
-            $ref: '#/definitions/User'
-      x-code-samples:
-        - lang: KOTLIN
-          source: >-
-            Did you know that a Kotlin Client library can be generated using the
-            Swagger Editor and that it would have all the type checks, limits
-            and patterns specified here?
-      responses:
-        '204':
-          description: Patched
         '400':
           description: Bad Request
         '404':
