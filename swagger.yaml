@@ -228,7 +228,6 @@ definitions:
     type: object
     required:
       - firstname
-      - dob
       - parent_id
     properties:
       id:
