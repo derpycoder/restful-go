@@ -20,7 +20,7 @@ type User struct {
 
 	// From where to inherit
 	// Required: true
-	ParentID string `datastore:"" json:"parent_id,omitempty"`
+	ParentID string `datastore:"-" json:"parent_id,omitempty"`
 
 	// First Name of the User
 	// Required: true
@@ -122,7 +122,29 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	ctx := appengine.NewContext(r)
+	params := mux.Vars(r)
+
+	client, err := datastore.NewClient(ctx, projectID)
+	if err != nil {
+		http.Error(w, "Failed to establish connection with Database: "+err.Error(), http.StatusServiceUnavailable)
+		return
+	}
+
+	key, err := datastore.DecodeKey(params["id"])
+	if err != nil {
+		http.Error(w, "Unable to Decode ID: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	key.Namespace = "NeverLand"
+
+	if err = client.Delete(ctx, key); err != nil {
+		http.Error(w, "Failed to Delete User: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
