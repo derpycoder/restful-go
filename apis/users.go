@@ -64,13 +64,21 @@ type User struct {
 	Status string `datastore:"status,omitempty" json:"status,omitempty"`
 }
 
+const (
+	UTCISO8601 = "2006-01-02T15:04:05.000Z"
+)
+
 func (u *User) MarshalJSON() ([]byte, error) {
 	type marshalledUser User
 	return json.Marshal(&struct {
-		Dob string `datastore:"dob" json:"dob"`
+		Dob         string `datastore:"dob" json:"dob"`
+		DateCreated string `datastore:"date_created" json:"date_created"`
+		DateUpdated string `datastore:"date_updated" json:"date_updated"`
 		*marshalledUser
 	}{
-		Dob:            time.Time(u.Dob).Format("2006-01-02"),
+		DateCreated:    time.Time(u.DateCreated).UTC().Format(UTCISO8601),
+		DateUpdated:    time.Time(u.DateUpdated).UTC().Format(UTCISO8601),
+		Dob:            time.Time(u.Dob).UTC().Format(UTCISO8601),
 		marshalledUser: (*marshalledUser)(u),
 	})
 }
@@ -102,6 +110,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	key := datastore.IDKey("Users", 0, parentKey)
 	key.Namespace = "NeverLand"
+
+	user.DateCreated = time.Now().UTC()
+	user.DateUpdated = time.Now().UTC()
 
 	key, err = client.Put(ctx, key, user)
 	if err != nil {
@@ -231,22 +242,27 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	b, _ := ioutil.ReadAll(r.Body)
 
-	var expectedUser = new(User)
+	var newUser = new(User)
 
-	err = json.Unmarshal(b, expectedUser)
+	err = json.Unmarshal(b, newUser)
 	if err != nil {
 		http.Error(w, "Unable to parse Request BODY: "+err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
 
-	var user User
+	var oldUser User
 
 	_, err = client.RunInTransaction(ctx, func(tx *datastore.Transaction) error {
-		if err := tx.Get(key, &user); err != nil && err != datastore.ErrNoSuchEntity {
+		if err := tx.Get(key, &oldUser); err != nil {
 			return err
 		}
-		user = *expectedUser
-		_, err := tx.Put(key, &user)
+
+		dateCreated, _ := time.Parse(UTCISO8601, time.Time(oldUser.DateCreated).UTC().Format(UTCISO8601))
+		newUser.DateCreated = dateCreated
+		newUser.DateUpdated = time.Now().UTC()
+
+		oldUser = *newUser
+		_, err := tx.Put(key, &oldUser)
 		return err
 	})
 	if err != nil {
@@ -254,7 +270,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json, err := json.Marshal(user)
+	json, err := json.Marshal(newUser)
 	if err != nil {
 		http.Error(w, "Unable to convert response to JSON: "+err.Error(), http.StatusInternalServerError)
 		return
