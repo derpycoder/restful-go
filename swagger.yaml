@@ -196,7 +196,7 @@ definitions:
   User:
     type: object
     required:
-      - firstname
+      - first_name
       - parent_id
     properties:
       id:
@@ -206,14 +206,14 @@ definitions:
       parent_id:
         type: string
         description: From where to inherit
-      firstname:
+      first_name:
         type: string
         description: First Name of the User
-      middlename:
+      middle_name:
         type: string
         x-nullable: true
         description: Middle Name of the User
-      lastname:
+      last_name:
         type: string
         x-nullable: true
         description: Last Name of the User
@@ -266,12 +266,12 @@ definitions:
           - B_POSITIVE
           - AB_NEGATIVE
           - AB_POSITIVE
-      date_created:
+      created_on:
         type: string
         format: date-time
         readOnly: true
         description: Date in ISO 8601 UTC Format
-      date_updated:
+      updated_on:
         type: string
         format: date-time
         readOnly: true

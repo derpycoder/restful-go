@@ -24,13 +24,13 @@ type User struct {
 
 	// First Name of the User
 	// Required: true
-	Firstname string `datastore:"firstname,omitempty" json:"firstname,omitempty"`
+	FirstName string `datastore:"first_name,omitempty" json:"first_name,omitempty"`
 
 	// Middle Name of the User
-	Middlename string `datastore:"middlename,omitempty" json:"middlename,omitempty"`
+	MiddleName string `datastore:"middle_name,omitempty" json:"middle_name,omitempty"`
 
 	// Last Name of the User
-	Lastname string `datastore:"lastname,omitempty" json:"lastname,omitempty"`
+	LastName string `datastore:"last_name,omitempty" json:"last_name,omitempty"`
 
 	// Validated Email Ids
 	EmailIds []string `datastore:"email_ids,omitempty" json:"email_ids,omitempty"`
@@ -53,11 +53,11 @@ type User struct {
 
 	// Date in UTC Zulu Format
 	// Read Only: true
-	DateCreated time.Time `datastore:"date_created" json:"date_created"`
+	CreatedOn time.Time `datastore:"created_on" json:"created_on"`
 
 	// Date in UTC Zulu Format
 	// Read Only: true
-	DateUpdated time.Time `datastore:"date_updated" json:"date_updated"`
+	UpdatedOn time.Time `datastore:"updated_on" json:"updated_on"`
 
 	// Status of the User's Account
 	// Read Only: true
@@ -71,13 +71,13 @@ const (
 func (u *User) MarshalJSON() ([]byte, error) {
 	type marshalledUser User
 	return json.Marshal(&struct {
-		Dob         string `datastore:"dob" json:"dob"`
-		DateCreated string `datastore:"date_created" json:"date_created"`
-		DateUpdated string `datastore:"date_updated" json:"date_updated"`
+		Dob       string `datastore:"dob" json:"dob"`
+		CreatedOn string `datastore:"created_on" json:"created_on"`
+		UpdatedOn string `datastore:"updated_on" json:"updated_on"`
 		*marshalledUser
 	}{
-		DateCreated:    time.Time(u.DateCreated).UTC().Format(ISO8601),
-		DateUpdated:    time.Time(u.DateUpdated).UTC().Format(ISO8601),
+		CreatedOn:      time.Time(u.CreatedOn).UTC().Format(ISO8601),
+		UpdatedOn:      time.Time(u.UpdatedOn).UTC().Format(ISO8601),
 		Dob:            time.Time(u.Dob).UTC().Format(ISO8601),
 		marshalledUser: (*marshalledUser)(u),
 	})
@@ -111,8 +111,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	key := datastore.IDKey("Users", 0, parentKey)
 	key.Namespace = "NeverLand"
 
-	user.DateCreated = time.Now().UTC()
-	user.DateUpdated = time.Now().UTC()
+	user.CreatedOn = time.Now().UTC()
+	user.UpdatedOn = time.Now().UTC()
 
 	key, err = client.Put(ctx, key, user)
 	if err != nil {
@@ -257,12 +257,11 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			return err
 		}
 
-		dateCreated, _ := time.Parse(ISO8601, time.Time(oldUser.DateCreated).UTC().Format(ISO8601))
-		newUser.DateCreated = dateCreated
-		newUser.DateUpdated = time.Now().UTC()
+		CreatedOn, _ := time.Parse(ISO8601, time.Time(oldUser.CreatedOn).UTC().Format(ISO8601))
+		newUser.CreatedOn = CreatedOn
+		newUser.UpdatedOn = time.Now().UTC()
 
-		oldUser = *newUser
-		_, err := tx.Put(key, &oldUser)
+		_, err := tx.Put(key, newUser)
 		return err
 	})
 	if err != nil {
