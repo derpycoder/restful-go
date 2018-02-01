@@ -73,7 +73,7 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/User'
-  '/users/{id}/avatar':
+  '/users/{id}/avatar/':
     post:
       tags:
         - Users

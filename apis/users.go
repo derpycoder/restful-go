@@ -69,17 +69,17 @@ const (
 )
 
 func (u *User) MarshalJSON() ([]byte, error) {
-	type marshalledUser User
+	type user User
 	return json.Marshal(&struct {
 		Dob       string `datastore:"dob" json:"dob"`
 		CreatedOn string `datastore:"created_on" json:"created_on"`
 		UpdatedOn string `datastore:"updated_on" json:"updated_on"`
-		*marshalledUser
+		*user
 	}{
-		CreatedOn:      time.Time(u.CreatedOn).UTC().Format(ISO8601),
-		UpdatedOn:      time.Time(u.UpdatedOn).UTC().Format(ISO8601),
-		Dob:            time.Time(u.Dob).UTC().Format(ISO8601),
-		marshalledUser: (*marshalledUser)(u),
+		CreatedOn: time.Time(u.CreatedOn).UTC().Format(ISO8601),
+		UpdatedOn: time.Time(u.UpdatedOn).UTC().Format(ISO8601),
+		Dob:       time.Time(u.Dob).UTC().Format(ISO8601),
+		user:      (*user)(u),
 	})
 }
 
