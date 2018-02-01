@@ -258,10 +258,7 @@ definitions:
         x-nullable: true
         items:
           type: string
-          pattern: '^\d{10}$'
-          minLength: 10
-          maxLength: 10
-        description: 10 Digit Unformatted Phone Numbers
+        description: Phone Number in any format possible
       dob:
         type: string
         format: date-time
