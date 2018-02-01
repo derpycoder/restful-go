@@ -122,7 +122,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	user.ID = key
 
-	json, err := json.Marshal(user)
+	json, err := json.MarshalIndent(user, "", "  ")
 	if err != nil {
 		http.Error(w, "Unable to convert response to JSON: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -177,7 +177,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json, err := json.Marshal(users)
+	json, err := json.MarshalIndent(users, "", "  ")
 	if err != nil {
 		http.Error(w, "Unable to convert response to JSON: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -213,7 +213,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json, err := json.Marshal(user)
+	json, err := json.MarshalIndent(user, "", "  ")
 	if err != nil {
 		http.Error(w, "Unable to convert response to JSON: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -269,7 +269,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json, err := json.Marshal(newUser)
+	json, err := json.MarshalIndent(newUser, "", "  ")
 	if err != nil {
 		http.Error(w, "Unable to convert response to JSON: "+err.Error(), http.StatusInternalServerError)
 		return
