@@ -15,6 +15,8 @@ basePath: /v0
 tags:
   - name: Users
     description: Home for every query related to Users
+  - name: Misc
+    description: Mix & Match of extra endpoints
 schemes:
   - https
 securityDefinitions:
@@ -34,6 +36,33 @@ x-servers:
   - url: custom-library-164415.appspot.com/v0
     description: Dev Server
 paths:
+  /contact-us:
+    post:
+      tags:
+        - Misc
+      summary: Contact Us
+      description: Endpoint for Mailing us
+      operationId: contact-us
+      parameters:
+        - in: body
+          name: User Response
+          description: Visitor's data
+          required: true
+          schema:
+            type: object
+            required:
+              - user_name
+              - user_message
+            properties:
+              user_name:
+                type: string
+                description: User's Name
+              user_message:
+                type: string
+                description: User's Message
+      responses:
+        '200':
+          description: OK
   /users:
     get:
       tags:
