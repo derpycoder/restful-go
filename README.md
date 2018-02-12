@@ -1,4 +1,4 @@
-# Unite Society Backend Repo
+# REST API made in GO
 > Houses Back End Code for REST API written in Go lang
 
 [![Custom Badge](https://img.shields.io/badge/Author-Abhijit%20Kar-brightgreen.svg?style=flat)](http://www.abhijit-kar.com/)
