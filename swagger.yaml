@@ -1,16 +1,16 @@
 swagger: '2.0'
 info:
-  title: Unite Society
-  description: '**Work In Progress**<br/>**API Key** is the same as the API Endpoint'
+  title: Restful Go
+  description: '**Restful API Playground**'
   version: 0.0.1
   contact:
-    name: VoraknoTech
-    email: reachus@voraknotech.com
+    name: Abhijit Kar
+    email: reachme@abhijit-kar.com
 externalDocs:
   description: Documentation
   url: >-
-    http://rebilly.github.io/ReDoc/?url=http://www.abhijit-kar.com/unite-society/swagger.yaml
-host: chrome-setup-158308.appspot.com
+    http://rebilly.github.io/ReDoc/?url=http://www.abhijit-kar.com/restful-go/swagger.yaml
+host: speedy-baton-195017.appspot.com
 basePath: /v0
 tags:
   - name: Users
@@ -31,17 +31,17 @@ consumes:
 produces:
   - application/json
 x-servers:
-  - url: custom-library-164415.appspot.com/v1
+  - url: speedy-baton-195017.appspot.com/v1
     description: Prod Server
-  - url: custom-library-164415.appspot.com/v0
+  - url: speedy-baton-195017.appspot.com/v0
     description: Dev Server
 paths:
   /contact-us:
     post:
       tags:
         - Misc
-      summary: Contact Us
-      description: Endpoint for Mailing us
+      summary: Contact Us (WIP)
+      description: Endpoint for Mailing me
       operationId: contact-us
       parameters:
         - in: body
@@ -85,9 +85,7 @@ paths:
       parameters:
         - in: body
           name: body
-          description: >-
-            User Object, User Parent ID
-            CgsiCU5ldmVyTGFuZBISCgdTb2NpZXR5EICAgICAgIAJEhEKBkZhbWlseRCAgICAgPKICg
+          description: User data
           required: true
           schema:
             $ref: '#/definitions/User'
@@ -106,7 +104,7 @@ paths:
     post:
       tags:
         - Users
-      summary: Image
+      summary: Image (WIP)
       description: Profile Image of the User
       operationId: upload-profile-image
       consumes:
@@ -226,15 +224,11 @@ definitions:
     type: object
     required:
       - first_name
-      - parent_id
     properties:
       id:
         type: string
         readOnly: true
         description: ID can be used for further queries
-      parent_id:
-        type: string
-        description: From where to inherit
       first_name:
         type: string
         description: First Name of the User
