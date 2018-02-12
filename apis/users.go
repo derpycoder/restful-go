@@ -11,16 +11,12 @@ import (
 	"google.golang.org/appengine"
 )
 
-var projectID = "chrome-setup-158308"
+var projectID = "speedy-baton-195017"
 
 type User struct {
 	// Auto Generated
 	// Read Only: true
 	ID *datastore.Key `datastore:"__key__" json:"id,omitempty"`
-
-	// From where to inherit
-	// Required: true
-	ParentID string `datastore:"-" json:"parent_id,omitempty"`
 
 	// First Name of the User
 	// Required: true
@@ -102,13 +98,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	parentKey, err := datastore.DecodeKey(user.ParentID)
-	if err != nil {
-		http.Error(w, "Unable to Decode Parent ID: "+err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	key := datastore.IDKey("Users", 0, parentKey)
+	key := datastore.IDKey("Users", 0, nil)
 	key.Namespace = "NeverLand"
 
 	user.CreatedOn = time.Now().UTC()
