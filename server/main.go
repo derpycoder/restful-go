@@ -6,7 +6,7 @@ import (
 
 	"google.golang.org/appengine"
 
-	apis "github.com/abhijit-kar/unite-society/apis"
+	apis "github.com/abhijit-kar/restful-go/apis"
 )
 
 func main() {
