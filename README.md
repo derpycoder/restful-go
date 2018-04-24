@@ -5,7 +5,7 @@
 [![MIT licensed](https://img.shields.io/badge/Licence-MIT-blue.svg?style=flat)](https://opensource.org/licenses/mit-license.php)
 [![GitHub Pages](https://img.shields.io/badge/Server-GitHub%20Pages-brightgreen.svg?style=flat)](http://www.abhijit-kar.com/swagger-editor/)
 
-### Sign IN GCloud
+### Sign into gcloud
 gcloud auth application-default login
 
 ### Generating Go Code
